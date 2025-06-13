@@ -959,7 +959,7 @@ class Paths
         {
             for (folder in mobile.backend.AssetUtils.listAssets()) // FileSystem.readDirectory
             {
-                if (file.startsWith(modsFolder))
+                if (folder.startsWith(modsFolder))
                 {
                     var relative = folder.substr(modsFolder.length);
                     // subdirectorys ignoration
