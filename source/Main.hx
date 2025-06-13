@@ -44,6 +44,7 @@ class Main extends Sprite
 		} catch (e:Dynamic) {
 			mobile.scripting.NativeAPI.showMessageBox("Crash on main", Std.string(e));
 			trace("Crash on main: " + Std.string(e));
+		}
 	}
 
 	public function new()
