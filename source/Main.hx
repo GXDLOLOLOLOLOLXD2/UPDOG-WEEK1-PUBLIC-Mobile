@@ -39,8 +39,11 @@ class Main extends Sprite
 	public static function main():Void
 	{
 		CrashHandler.init();
-
-		Lib.current.addChild(new Main());
+		try {
+			Lib.current.addChild(new Main());
+		} catch (e:Dynamic) {
+			mobile.scripting.NativeAPI.showMessageBox("Crash on main", Std.string(e));
+			trace("Crash on main: " + Std.string(e));
 	}
 
 	public function new()
