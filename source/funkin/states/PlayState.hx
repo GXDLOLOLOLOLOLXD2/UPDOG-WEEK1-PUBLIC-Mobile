@@ -593,8 +593,10 @@ class PlayState extends MusicBeatState
 			{
 				for (file in mobile.backend.AssetUtils.listAssets())
 				{
-					if (file.startsWith(directory))
+					if (file.startsWith(folder))
 					{
+						var relative = file.substr(folder.length);
+						if (relative == "" || relative.indexOf("/") != -1) continue;
 						if (!filesPushed.contains(file))
 						{
 							if (file.endsWith('.lua'))
@@ -796,7 +798,7 @@ class PlayState extends MusicBeatState
 			{
 				for (file in mobile.backend.AssetUtils.listAssets())
 				{
-					if (file.startsWith(directory))
+					if (file.startsWith(folder))
 					{
 						if (!filesPushed.contains(file))
 						{

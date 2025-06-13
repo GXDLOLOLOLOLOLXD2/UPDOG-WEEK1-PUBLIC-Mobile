@@ -1247,10 +1247,13 @@ class NoteSkinEditor extends MusicBeatState
         		{
             		if (file.startsWith(directory))
             		{
-                		var path = haxe.io.Path.join([directory, file.substr(directory.length)]);
+				var relative = file.substr(directory.length);
+                    		// Subdirectory Ignoration and Null files
+                    		if (relative == "" || relative.indexOf("/") != -1) continue;
+                		var path = haxe.io.Path.join([directory, relative]);
                 		if (!mobile.backend.AssetUtils.isAssetDirectory(path) && file.endsWith('.json'))
                 		{
-                    		var charToCheck:String = file.substr(0, file.length - 5);
+                    		var charToCheck:String = relative.substr(0, relative.length - 5);
                     		if (!skinsLoaded.exists(charToCheck))
                     		{
                         		skinList.push(charToCheck);

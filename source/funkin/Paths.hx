@@ -959,11 +959,14 @@ class Paths
         {
             for (folder in mobile.backend.AssetUtils.listAssets()) // FileSystem.readDirectory
             {
-                if (file.startsWith(directory))
+                if (file.startsWith(modsFolder))
                 {
-                    var path = haxe.io.Path.join([modsFolder, folder]);
-                    if (mobile.backend.AssetUtils.isAssetDirectory(path) && !ignoreModFolders.contains(folder) && !list.contains(folder))
-                        list.push(folder); // sys.FileSystem.isDirectory
+                    var relative = folder.substr(modsFolder.length);
+                    // subdirectorys ignoration
+                    if (relative == "" || relative.indexOf("/") != -1) continue;
+                    var path = haxe.io.Path.join([modsFolder, relative]);
+                    if (mobile.backend.AssetUtils.isAssetDirectory(path) && !ignoreModFolders.contains(relative) && !list.contains(relative))
+                        list.push(relative); // sys.FileSystem.isDirectory
                 }
             }
         }

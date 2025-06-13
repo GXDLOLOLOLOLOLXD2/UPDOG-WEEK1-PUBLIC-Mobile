@@ -9,6 +9,7 @@ import openfl.utils.ByteArray;
 //import haxe.concurrent.Future;
 
 import funkin.Paths.findAsset;
+import mobile.scripting.NativeAPI;
 
 #if sys
 import sys.io.File;
