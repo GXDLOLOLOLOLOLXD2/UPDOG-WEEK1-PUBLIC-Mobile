@@ -8,6 +8,8 @@ import sys.FileSystem;
 import sys.io.File;
 #end
 
+import mobile.scripting.NativeAPI; // Adicione este import
+
 using StringTools;
 using flixel.util.FlxArrayUtil;
 
@@ -60,9 +62,9 @@ class CrashHandler
 					switch (parent)
 					{
 						case Method(cla, func):
-							stackLabelArr.push('${file.replace('.hx', '')}.$func() [line $line]');
+							stackLabelArr.push('${file.replace(".hx", "")}.$func() [line $line]');
 						case _:
-							stackLabelArr.push('${file.replace('.hx', '')} [line $line]');
+							stackLabelArr.push('${file.replace(".hx", "")} [line $line]');
 					}
 				case LocalFunction(v):
 					stackLabelArr.push('Local Function ${v}');
@@ -77,6 +79,9 @@ class CrashHandler
 		#end
 
 		CoolUtil.showPopUp('$m\n$stackLabel', "Error!");
+
+		NativeAPI.showMessageBox("Crash Handler", '$m\n$stackLabel');
+
 		// DISCORD_ALLOWED
 		#if desktop DiscordClient.shutdown(); #end
 		lime.system.System.exit(1);
@@ -97,6 +102,8 @@ class CrashHandler
 		#end
 
 		CoolUtil.showPopUp(log.join('\n'), "Critical Error!");
+		NativeAPI.showMessageBox("Crash Handler", log.join('\n'));
+
 		// DISCORD_ALLOWED
 		#if desktop DiscordClient.shutdown(); #end
 		lime.system.System.exit(1);

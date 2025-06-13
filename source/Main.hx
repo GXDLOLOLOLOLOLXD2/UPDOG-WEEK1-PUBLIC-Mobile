@@ -11,6 +11,8 @@ import lime.system.System as LimeSystem;
 import mobile.states.LoadingScreen;
 import Splash;
 
+import mobile.backend.CrashHandler;
+
 class Main extends Sprite
 {
 	public static final PSYCH_VERSION:String = '0.5.2h';
@@ -36,6 +38,8 @@ class Main extends Sprite
 
 	public static function main():Void
 	{
+		CrashHandler.init();
+
 		Lib.current.addChild(new Main());
 	}
 
@@ -43,7 +47,7 @@ class Main extends Sprite
 	{
 		super();
 
-		mobile.backend.CrashHandler.init();
+		//mobile.backend.CrashHandler.init();
 
 		LoadingScreen.nextState = Splash;
 		ClientPrefs.loadDefaultKeys();
