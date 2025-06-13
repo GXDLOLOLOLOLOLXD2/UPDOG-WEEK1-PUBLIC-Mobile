@@ -1240,23 +1240,26 @@ class NoteSkinEditor extends MusicBeatState
 			directories.push(Paths.mods(mod + '/noteskins/'));
 		for (i in 0...directories.length)
 		{
-			var directory:String = directories[i];
-			if (mobile.backend.AssetUtils.assetExists(directory))
-			{
-				for (file in mobile.backend.AssetUtils.listAssets(directory))
-				{
-					var path = haxe.io.Path.join([directory, file]);
-					if (!mobile.backend.AssetUtils.isAssetDirectory(path) && file.endsWith('.json'))
-					{
-						var charToCheck:String = file.substr(0, file.length - 5);
-						if (!skinsLoaded.exists(charToCheck))
-						{
-							skinList.push(charToCheck);
-							skinsLoaded.set(charToCheck, true);
-						}
-					}
-				}
-			}
+    		var directory:String = directories[i];
+    		if (mobile.backend.AssetUtils.assetExists(directory))
+    		{
+        		for (file in mobile.backend.AssetUtils.listAssets())
+        		{
+            		if (file.startsWith(directory))
+            		{
+                		var path = haxe.io.Path.join([directory, file.substr(directory.length)]);
+                		if (!mobile.backend.AssetUtils.isAssetDirectory(path) && file.endsWith('.json'))
+                		{
+                    		var charToCheck:String = file.substr(0, file.length - 5);
+                    		if (!skinsLoaded.exists(charToCheck))
+                    		{
+                        		skinList.push(charToCheck);
+                        		skinsLoaded.set(charToCheck, true);
+                    		}
+                		}
+            		}
+        		}
+    		}
 		}
 		// #else
 		// skinList = CoolUtil.coolTextFile(Paths.txt('noteskin_list'));

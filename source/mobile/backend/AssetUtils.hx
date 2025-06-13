@@ -7,6 +7,9 @@ import openfl.media.Sound;
 import openfl.text.Font;
 import openfl.utils.ByteArray;
 //import haxe.concurrent.Future;
+
+import funkin.Paths.findAsset;
+
 #if sys
 import sys.io.File;
 #end
@@ -48,8 +51,16 @@ class AssetUtils
      */
     public static function assetExists(id:String, ?type:AssetType):Bool
     {
-        //NativeAPI.showMessageBox("Asset Exists", "Checking if asset '${id}' exists: ${Assets.exists(id, type)}");
-        return Assets.exists(id, type);
+        var path = findAsset(id);
+        if (path != null) {
+            try {
+                return path != null;
+            } catch (e:Dynamic) {
+                NativeAPI.showMessageBox("Asset Exists", "Checking if asset '${id}' exists: ${Assets.exists(id, type)}");
+            }
+        }
+        return false;
+        //return Assets.exists(id, type);
     }
 
     /**
@@ -63,12 +74,22 @@ class AssetUtils
      */
     public static function getBitmap(id:String):BitmapData
     {
-        try {
+        var path = findAsset(id);
+        if (path != null) {
+            try {
+                return Assets.getBitmapData(path);
+            } catch (e:Dynamic) {
+                trace('Error in load image "${path}": ${e}');
+                NativeAPI.showMessageBox("Assets Error", "Failed to load image '${path}': ${e}");
+            }
+        }
+        return null;
+        /*try {
             return Assets.getBitmapData(id);
         } catch (e:Dynamic) {
             trace('Error in load image "${id}": ${e}');
             return null; // Retorna null em caso de erro
-        }
+        }*/
     }
 
     /**
@@ -82,12 +103,22 @@ class AssetUtils
      */
     public static function getSound(id:String):Sound
     {
-        try {
+        var path = findAsset(id);
+        if (path != null) {
+            try {
+                return Assets.getSound(path);
+            } catch (e:Dynamic) {
+                trace('Error in load sound "${path}": ${e}');
+                NativeAPI.showMessageBox("Assets Error", "Failed to load sound '${path}': ${e}");
+            }
+        }
+        return null;
+        /*try {
             return Assets.getSound(id);
         } catch (e:Dynamic) {
             trace('Error in load sound "${id}": ${e}');
             return null;
-        }
+        }*/
     }
 
     /**
@@ -101,12 +132,22 @@ class AssetUtils
      */
     public static function getFont(id:String):Font
     {
-        try {
+        var path = findAsset(id);
+        if (path != null) {
+            try {
+                return Assets.getFont(path);
+            } catch (e:Dynamic) {
+                trace('Error in load font "${path}": ${e}');
+                NativeAPI.showMessageBox("Assets Error", "Failed to load font '${path}': ${e}");
+            }
+        }
+        return null;
+        /*try {
             return Assets.getFont(id);
         } catch (e:Dynamic) {
             trace('Error in load font "${id}": ${e}');
             return null;
-        }
+        }*/
     }
 
     /**
@@ -119,12 +160,22 @@ class AssetUtils
      */
     public static function getText(id:String):String
     {
-        try {
+        var path = findAsset(id);
+        if (path != null) {
+            try {
+                return Assets.getText(path);
+            } catch (e:Dynamic) {
+                trace('Error in load text "${path}": ${e}');
+                NativeAPI.showMessageBox("Assets Error", "Failed to load text '${path}': ${e}");
+            }
+        }
+        return null;
+        /*try {
             return Assets.getText(id);
         } catch (e:Dynamic) {
             trace('Error in load text "${id}": ${e}');
             return null;
-        }
+        }*/
     }
 
     /**
@@ -137,12 +188,22 @@ class AssetUtils
      */
     public static function getBytes(id:String):ByteArray
     {
-        try {
+        var path = findAsset(id);
+        if (path != null) {
+            try {
+                return Assets.getBytes(path);
+            } catch (e:Dynamic) {
+                trace('Error in load bytes "${path}": ${e}');
+                NativeAPI.showMessageBox("Assets Error", "Failed to load bytes from '${path}': ${e}");
+            }
+        }
+        return null;
+        /*try {
             return Assets.getBytes(id);
         } catch (e:Dynamic) {
             trace('Error in load bytes "${id}": ${e}');
             return null;
-        }
+        }*/
     }
 
     /**
@@ -178,10 +239,20 @@ class AssetUtils
      */
     public static function getAssetContent(id:String):String
     {
-        if (Assets.exists(id)) {
-            return Assets.getText(id);
+        var path = findAsset(id);
+        if (path != null) {
+            try {
+                return Assets.getText(path);
+            } catch (e:Dynamic) {
+                trace('Error in get asset content "${path}": ${e}');
+                NativeAPI.showMessageBox("Assets Error", "Failed to get content from asset '${path}': ${e}");
+            }
         }
         return null;
+        /*if (Assets.exists(id)) {
+            return Assets.getText(id);
+        }
+        return null;*/
     }
 
     /**

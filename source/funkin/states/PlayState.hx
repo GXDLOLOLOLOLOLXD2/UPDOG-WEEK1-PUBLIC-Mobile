@@ -591,31 +591,34 @@ class PlayState extends MusicBeatState
 		{
 			if (mobile.backend.AssetUtils.assetExists(folder))
 			{
-				for (file in mobile.backend.AssetUtils.listAssets(folder))
+				for (file in mobile.backend.AssetUtils.listAssets())
 				{
-					if (!filesPushed.contains(file))
+					if (file.startsWith(directory))
 					{
-						if (file.endsWith('.lua'))
+						if (!filesPushed.contains(file))
 						{
-							#if LUA_ALLOWED
-							var script = new FunkinLua(folder + file);
-							luaArray.push(script);
-							funkyScripts.push(script);
-							filesPushed.push(file);
-							#end
-						}
-						else
-						{
-							for (ext in FunkinIris.exts)
+							if (file.endsWith('.lua'))
 							{
-								if (file.endsWith('.$ext'))
+								#if LUA_ALLOWED
+								var script = new FunkinLua(folder + file);
+								luaArray.push(script);
+								funkyScripts.push(script);
+								filesPushed.push(file);
+								#end
+							}
+							else
+							{
+								for (ext in FunkinIris.exts)
 								{
-									var script = initFunkinIris(folder + file);
-									if (script != null)
+									if (file.endsWith('.$ext'))
 									{
-										filesPushed.push(file);
+										var script = initFunkinIris(folder + file);
+										if (script != null)
+										{
+											filesPushed.push(file);
+										}
+										break;
 									}
-									break;
 								}
 							}
 						}
@@ -791,31 +794,34 @@ class PlayState extends MusicBeatState
 		{
 			if (mobile.backend.AssetUtils.assetExists(folder))
 			{
-				for (file in mobile.backend.AssetUtils.listAssets(folder))
+				for (file in mobile.backend.AssetUtils.listAssets())
 				{
-					if (!filesPushed.contains(file))
+					if (file.startsWith(directory))
 					{
-						if (file.endsWith('.lua'))
+						if (!filesPushed.contains(file))
 						{
-							#if LUA_ALLOWED
-							var script = new FunkinLua(folder + file);
-							luaArray.push(script);
-							funkyScripts.push(script);
-							filesPushed.push(file);
-							#end
-						}
-						else
-						{
-							for (ext in FunkinIris.exts)
+							if (file.endsWith('.lua'))
 							{
-								if (file.endsWith('.$ext'))
+								#if LUA_ALLOWED
+								var script = new FunkinLua(folder + file);
+								luaArray.push(script);
+								funkyScripts.push(script);
+								filesPushed.push(file);
+								#end
+							}
+							else
+							{
+								for (ext in FunkinIris.exts)
 								{
-									var sc = initFunkinIris(folder + file);
-									if (sc != null)
+									if (file.endsWith('.$ext'))
 									{
-										filesPushed.push(file);
+										var sc = initFunkinIris(folder + file);
+										if (sc != null)
+										{
+											filesPushed.push(file);
+										}
+										break;
 									}
-									break;
 								}
 							}
 						}

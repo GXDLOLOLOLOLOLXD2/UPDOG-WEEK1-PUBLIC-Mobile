@@ -19,7 +19,7 @@ import funkin.objects.RankIcon;
 import funkin.backend.FunkinShader.FunkinRuntimeShader;
 import funkin.utils.DifficultyUtil;
 import funkin.states.substates.GameplayChangersSubstate;
-
+import mobile.scripting.NativeAPI;
 class FreeplayState extends MusicBeatState
 {
 	public static var curWeek:Int = 0;

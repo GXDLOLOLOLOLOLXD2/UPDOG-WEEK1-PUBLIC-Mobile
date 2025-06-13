@@ -195,13 +195,13 @@ class WeekData
 					}
 				}
 
-				for (file in mobile.backend.AssetUtils.listAssets(directory))
-				{
-					var path = haxe.io.Path.join([directory, file]);
-					if (!mobile.backend.AssetUtils.isAssetDirectory(path) && file.endsWith('.json'))
-					{
-						addWeek(file.substr(0, file.length - 5), path, directories[i], i, originalLength);
-					}
+				for (file in mobile.backend.AssetUtils.listAssets()) {
+    				if (file.startsWith(directory)) {
+        				var path = haxe.io.Path.join([directory, file.substr(directory.length)]);
+        				if (!mobile.backend.AssetUtils.isAssetDirectory(path) && file.endsWith('.json')) {
+            				addWeek(file.substr(0, file.length - 5), path, directories[i], i, originalLength);
+        				}
+    				}
 				}
 			}
 		}

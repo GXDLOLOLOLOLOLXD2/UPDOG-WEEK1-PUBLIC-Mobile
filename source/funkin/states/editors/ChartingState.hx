@@ -753,16 +753,19 @@ class ChartingState extends MusicBeatState
 			var directory:String = directories[i];
 			if (mobile.backend.AssetUtils.assetExists(directory))
 			{
-				for (file in mobile.backend.AssetUtils.listAssets(directory))
+				for (file in mobile.backend.AssetUtils.listAssets())
 				{
-					var path = haxe.io.Path.join([directory, file]);
-					if (!mobile.backend.AssetUtils.isAssetDirectory(path) && file.endsWith('.json'))
+					if (file.startsWith(directory))
 					{
-						var charToCheck:String = file.substr(0, file.length - 5);
-						if (!hiddenChars.contains(charToCheck) && !charToCheck.endsWith('-dead') && !tempMap.exists(charToCheck))
+						var path = haxe.io.Path.join([directory, file]);
+						if (!mobile.backend.AssetUtils.isAssetDirectory(path) && file.endsWith('.json'))
 						{
-							tempMap.set(charToCheck, true);
-							characters.push(charToCheck);
+							var charToCheck:String = file.substr(0, file.length - 5);
+							if (!hiddenChars.contains(charToCheck) && !charToCheck.endsWith('-dead') && !tempMap.exists(charToCheck))
+							{
+								tempMap.set(charToCheck, true);
+								characters.push(charToCheck);
+							}
 						}
 					}
 				}
@@ -824,16 +827,19 @@ class ChartingState extends MusicBeatState
 			var directory:String = directories[i];
 			if (mobile.backend.AssetUtils.assetExists(directory))
 			{
-				for (file in mobile.backend.AssetUtils.listAssets(directory))
+				for (file in mobile.backend.AssetUtils.listAssets())
 				{
-					var path = haxe.io.Path.join([directory, file]);
-					if (!mobile.backend.AssetUtils.isAssetDirectory(path) && file.endsWith('.json'))
+					if (file.startsWith(directory))
 					{
-						var stageToCheck:String = file.substr(0, file.length - 5);
-						if (!hiddenStages.contains(stageToCheck) && !tempMap.exists(stageToCheck))
+						var path = haxe.io.Path.join([directory, file]);
+						if (!mobile.backend.AssetUtils.isAssetDirectory(path) && file.endsWith('.json'))
 						{
-							tempMap.set(stageToCheck, true);
-							stages.push(stageToCheck);
+							var stageToCheck:String = file.substr(0, file.length - 5);
+							if (!hiddenStages.contains(stageToCheck) && !tempMap.exists(stageToCheck))
+							{
+								tempMap.set(stageToCheck, true);
+								stages.push(stageToCheck);
+							}
 						}
 					}
 				}
@@ -1424,30 +1430,33 @@ class ChartingState extends MusicBeatState
 			var directory:String = directories[i];
 			if (mobile.backend.AssetUtils.assetExists(directory))
 			{
-				for (file in mobile.backend.AssetUtils.listAssets(directory))
+				for (file in mobile.backend.AssetUtils.listAssets())
 				{
-					var path = haxe.io.Path.join([directory, file]);
-					if (!mobile.backend.AssetUtils.isAssetDirectory(path))
+					if (file.startsWith(directory))
 					{
-						for (ext in exts)
+						var path = haxe.io.Path.join([directory, file]);
+						if (!mobile.backend.AssetUtils.isAssetDirectory(path))
 						{
-							if (file.endsWith(ext))
+							for (ext in exts)
 							{
-								var fileToCheck:String = file.substr(0, file.length - ext.length);
-
-								if (!noteTypeMap.exists(fileToCheck))
+								if (file.endsWith(ext))
 								{
-									displayNameList.push(fileToCheck);
-									noteTypeMap.set(fileToCheck, key);
-									noteTypeIntMap.set(key, fileToCheck);
+									var fileToCheck:String = file.substr(0, file.length - ext.length);
 
-									if (ext != '.lua')
+									if (!noteTypeMap.exists(fileToCheck))
 									{
-										var script = FunkinIris.fromFile(path, fileToCheck);
-										notetypeScripts.set(fileToCheck, script);
-									}
+										displayNameList.push(fileToCheck);
+										noteTypeMap.set(fileToCheck, key);
+										noteTypeIntMap.set(key, fileToCheck);
 
-									key++;
+										if (ext != '.lua')
+										{
+											var script = FunkinIris.fromFile(path, fileToCheck);
+											notetypeScripts.set(fileToCheck, script);
+										}
+
+										key++;
+									}
 								}
 							}
 						}
@@ -1510,32 +1519,35 @@ class ChartingState extends MusicBeatState
 			var directory:String = directories[i];
 			if (mobile.backend.AssetUtils.assetExists(directory))
 			{
-				for (file in mobile.backend.AssetUtils.listAssets(directory))
+				for (file in mobile.backend.AssetUtils.listAssets())
 				{
-					var path = haxe.io.Path.join([directory, file]);
-					for (ext in 0...eventexts.length)
+					if (file.startsWith(directory))
 					{
-						if (!mobile.backend.AssetUtils.isAssetDirectory(path) && file != 'readme.txt' && file.endsWith(eventexts[ext]))
+						var path = haxe.io.Path.join([directory, file]);
+						for (ext in 0...eventexts.length)
 						{
-							var fileToCheck:String = file.substr(0, file.length - removeShit[ext]);
-							if (!eventPushedMap.exists(fileToCheck))
+							if (!mobile.backend.AssetUtils.isAssetDirectory(path) && file != 'readme.txt' && file.endsWith(eventexts[ext]))
 							{
-								eventPushedMap.set(fileToCheck, true);
-								for (x in ['.hx', '.hxs', '.hscript'])
+								var fileToCheck:String = file.substr(0, file.length - removeShit[ext]);
+								if (!eventPushedMap.exists(fileToCheck))
 								{
-									if (file.endsWith(x))
+									eventPushedMap.set(fileToCheck, true);
+									for (x in ['.hx', '.hxs', '.hscript'])
 									{
-										eventStuff.push([fileToCheck, 'scripted description']);
-										break;
-									}
-									else
-									{
-										eventStuff.push([fileToCheck, File.getContent(path)]);
-										break;
+										if (file.endsWith(x))
+										{
+											eventStuff.push([fileToCheck, 'scripted description']);
+											break;
+										}
+										else
+										{
+											eventStuff.push([fileToCheck, File.getContent(path)]);
+											break;
+										}
 									}
 								}
+								break;
 							}
-							break;
 						}
 					}
 				}

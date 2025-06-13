@@ -523,7 +523,7 @@ class Paths
             var bitmap = BitmapData.fromFile(path);
             return FlxGraphic.fromBitmapData(bitmap, false, path);
         }
-        trace('Image Asset not found: $relPath');
+        trace('Image Asset not found: $key'); // or $path if wants
         NativeAPI.showMessageBox("Path Error", "The image \"" + key + "\" not found. The image really exists?...");
         return returnGraphic(key, library); // default fallback
     }
@@ -957,11 +957,14 @@ class Paths
         var modsFolder:String = mods();
         if (mobile.backend.AssetUtils.assetExists(modsFolder)) // FileSystem.exists
         {
-            for (folder in mobile.backend.AssetUtils.listAssets(modsFolder)) // FileSystem.readDirectory
+            for (folder in mobile.backend.AssetUtils.listAssets()) // FileSystem.readDirectory
             {
-                var path = haxe.io.Path.join([modsFolder, folder]);
-                if (mobile.backend.AssetUtils.isAssetDirectory(path) && !ignoreModFolders.contains(folder) && !list.contains(folder))
-                    list.push(folder); // sys.FileSystem.isDirectory
+                if (file.startsWith(directory))
+                {
+                    var path = haxe.io.Path.join([modsFolder, folder]);
+                    if (mobile.backend.AssetUtils.isAssetDirectory(path) && !ignoreModFolders.contains(folder) && !list.contains(folder))
+                        list.push(folder); // sys.FileSystem.isDirectory
+                }
             }
         }
         return list;
