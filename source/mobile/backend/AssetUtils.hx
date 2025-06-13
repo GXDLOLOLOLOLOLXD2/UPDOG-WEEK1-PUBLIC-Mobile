@@ -184,8 +184,45 @@ class AssetUtils
         return null;
     }
 
-    // --- Métodos assíncronos (retornam Future) ---
+    /**
+     * Ensures that the given path ends with a '/' character.
+     * 
+     * This function is the "opposite" (internal counterpart) of `sys.FileSystem.isDirectory`,
+     * as it modifies the path string to explicitly indicate a directory by appending a trailing slash if missing.
+     *
+     * Usage:
+     * ```
+     * if (AssetUtils.isAssetDirectory("assets/images/menu/story")) {
+     * // Existe pelo menos um asset nesse "diretório virtual"
+     * // At least one asset exists in this "virtual directory"
+     * }
+     * ```
+     *
+     * @param path The file or directory path to normalize.
+     * @return The normalized path ending with a '/'.
+     */
+    public static function isAssetDirectory(path:String):Bool
+    {
+        // Garante que termina com o caractere /.
+        // =>
+        // Ensures that the given path ends with a '/' character.
+        if (!path.endsWith("/")) path += "/";
+        for (id in Assets.list())
+        {
+            if (id.startsWith(path)) return true;
+        }
+        return false;
+    }
 
+    /*                      ______ _____ ___
+       |    |  |\   | |   | \      |     |  \
+       |    |  | \  | |   |  \     |____ |   |   Functions
+       |    |  |  \ | |   |  /     |     |   |   LOL
+       |____|  |   \| |___| /_____ |____ |__/
+       "Unused"
+    */
+
+    // --- Métodos assíncronos (retornam Future) ---
     /**
      * Carrega assincronamente e retorna os dados de bitmap de uma imagem interna.
      * @param id O identificador do asset da imagem.

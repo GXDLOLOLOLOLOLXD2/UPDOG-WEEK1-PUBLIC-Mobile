@@ -72,9 +72,9 @@ class Stage extends FlxTypedGroup<FlxBasic>
 		final baseScriptFile:String = 'stages/' + curStage;
 
 		var scriptFile = FunkinIris.getPath(baseScriptFile);
-		if (FileSystem.exists(scriptFile))
+		if (mobile.backend.AssetUtils.assetExists(scriptFile)) // FileSystem.exists
 		{
-			trace('FUCKL');
+			// trace('FUCKL');
 			var script = FunkinIris.fromFile(scriptFile);
 			setupScript(script);
 		}

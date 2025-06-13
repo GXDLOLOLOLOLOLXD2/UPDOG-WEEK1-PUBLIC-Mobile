@@ -98,9 +98,9 @@ class NoteSkinEditor extends MusicBeatState
 	{
 		var noteskin:NoteSkinHelper = null;
 
-		if (FileSystem.exists(Paths.modsNoteskin(n)))
+		if (mobile.backend.AssetUtils.assetExists(Paths.modsNoteskin(n)))
 			noteskin = new NoteSkinHelper(Paths.modsNoteskin(n));
-		else if (FileSystem.exists(Paths.noteskin(n)))
+		else if (mobile.backend.AssetUtils.assetExists(Paths.noteskin(n)))
 			noteskin = new NoteSkinHelper(Paths.noteskin(n));
 
 		noteskin ??= new NoteSkinHelper(Paths.noteskin('default'));
@@ -1241,12 +1241,12 @@ class NoteSkinEditor extends MusicBeatState
 		for (i in 0...directories.length)
 		{
 			var directory:String = directories[i];
-			if (FileSystem.exists(directory))
+			if (mobile.backend.AssetUtils.assetExists(directory))
 			{
-				for (file in FileSystem.readDirectory(directory))
+				for (file in mobile.backend.AssetUtils.listAssets(directory))
 				{
 					var path = haxe.io.Path.join([directory, file]);
-					if (!sys.FileSystem.isDirectory(path) && file.endsWith('.json'))
+					if (!mobile.backend.AssetUtils.isAssetDirectory(path) && file.endsWith('.json'))
 					{
 						var charToCheck:String = file.substr(0, file.length - 5);
 						if (!skinsLoaded.exists(charToCheck))

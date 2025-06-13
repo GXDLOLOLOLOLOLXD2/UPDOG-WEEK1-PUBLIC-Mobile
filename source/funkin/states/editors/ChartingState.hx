@@ -79,7 +79,7 @@ class OurLittleFriend extends FlxSprite
 	{
 		super();
 		final basePath = 'images/editors/friends/$char';
-		if (FileSystem.exists(Paths.getSharedPath('$basePath.png')))
+		if (mobile.backend.AssetUtils.assetExists(Paths.findAsset('$basePath.png')))//getSharedPath
 		{
 			frames = Paths.getSparrowAtlas(basePath.substr(basePath.indexOf('/') + 1));
 			animation.addByPrefix('idle', 'i', 24);
@@ -99,8 +99,8 @@ class OurLittleFriend extends FlxSprite
 
 	function buildOffsets(?path:String)
 	{
-		path ??= _offsetPath;
-		if (FileSystem.exists(Paths.getSharedPath('$path.txt'))) for (k => i in File.getContent(Paths.getSharedPath('$path.txt')).trim().split('\n'))
+		path ??= _offsetPath;//getSharedPath
+		if (mobile.backend.AssetUtils.assetExists(Paths.findAsset('$path.txt'))) for (k => i in File.getContent(Paths.getSharedPath('$path.txt')).trim().split('\n'))
 		{
 			var value = i.trim().split(',');
 			offsets.set(k, [Std.parseFloat(value[0]), Std.parseFloat(value[1])]);
@@ -675,7 +675,7 @@ class ChartingState extends MusicBeatState
 			var songName:String = Paths.formatToSongPath(_song.song);
 			var file:String = Paths.json(songName + '/events');
 			#if sys
-			if (#if MODS_ALLOWED FileSystem.exists(Paths.modsJson(songName + '/events')) || #end FileSystem.exists(file))
+			if (#if MODS_ALLOWED mobile.backend.AssetUtils.assetExists(Paths.modsJson(songName + '/events')) || #end FileSystem.exists(file))
 			#else
 			if (OpenFlAssets.exists(file))
 			#end
@@ -751,12 +751,12 @@ class ChartingState extends MusicBeatState
 		for (i in 0...directories.length)
 		{
 			var directory:String = directories[i];
-			if (FileSystem.exists(directory))
+			if (mobile.backend.AssetUtils.assetExists(directory))
 			{
-				for (file in FileSystem.readDirectory(directory))
+				for (file in mobile.backend.AssetUtils.listAssets(directory))
 				{
 					var path = haxe.io.Path.join([directory, file]);
-					if (!FileSystem.isDirectory(path) && file.endsWith('.json'))
+					if (!mobile.backend.AssetUtils.isAssetDirectory(path) && file.endsWith('.json'))
 					{
 						var charToCheck:String = file.substr(0, file.length - 5);
 						if (!hiddenChars.contains(charToCheck) && !charToCheck.endsWith('-dead') && !tempMap.exists(charToCheck))
@@ -822,12 +822,12 @@ class ChartingState extends MusicBeatState
 		for (i in 0...directories.length)
 		{
 			var directory:String = directories[i];
-			if (FileSystem.exists(directory))
+			if (mobile.backend.AssetUtils.assetExists(directory))
 			{
-				for (file in FileSystem.readDirectory(directory))
+				for (file in mobile.backend.AssetUtils.listAssets(directory))
 				{
 					var path = haxe.io.Path.join([directory, file]);
-					if (!FileSystem.isDirectory(path) && file.endsWith('.json'))
+					if (!mobile.backend.AssetUtils.isAssetDirectory(path) && file.endsWith('.json'))
 					{
 						var stageToCheck:String = file.substr(0, file.length - 5);
 						if (!hiddenStages.contains(stageToCheck) && !tempMap.exists(stageToCheck))
@@ -1422,12 +1422,12 @@ class ChartingState extends MusicBeatState
 		for (i in 0...directories.length)
 		{
 			var directory:String = directories[i];
-			if (FileSystem.exists(directory))
+			if (mobile.backend.AssetUtils.assetExists(directory))
 			{
-				for (file in FileSystem.readDirectory(directory))
+				for (file in mobile.backend.AssetUtils.listAssets(directory))
 				{
 					var path = haxe.io.Path.join([directory, file]);
-					if (!FileSystem.isDirectory(path))
+					if (!mobile.backend.AssetUtils.isAssetDirectory(path))
 					{
 						for (ext in exts)
 						{
@@ -1508,14 +1508,14 @@ class ChartingState extends MusicBeatState
 		for (i in 0...directories.length)
 		{
 			var directory:String = directories[i];
-			if (FileSystem.exists(directory))
+			if (mobile.backend.AssetUtils.assetExists(directory))
 			{
-				for (file in FileSystem.readDirectory(directory))
+				for (file in mobile.backend.AssetUtils.listAssets(directory))
 				{
 					var path = haxe.io.Path.join([directory, file]);
 					for (ext in 0...eventexts.length)
 					{
-						if (!FileSystem.isDirectory(path) && file != 'readme.txt' && file.endsWith(eventexts[ext]))
+						if (!mobile.backend.AssetUtils.isAssetDirectory(path) && file != 'readme.txt' && file.endsWith(eventexts[ext]))
 						{
 							var fileToCheck:String = file.substr(0, file.length - removeShit[ext]);
 							if (!eventPushedMap.exists(fileToCheck))
@@ -3181,14 +3181,14 @@ class ChartingState extends MusicBeatState
 		var characterPath:String = 'characters/' + char + '.json';
 		#if MODS_ALLOWED
 		var path:String = Paths.modFolders(characterPath);
-		if (!FileSystem.exists(path))
+		if (!mobile.backend.AssetUtils.assetExists(path))
 		{
-			path = Paths.getSharedPath(characterPath);
+			path = Paths.findAsset(characterPath); // getSharedPath
 		}
 
-		if (!FileSystem.exists(path))
+		if (!mobile.backend.AssetUtils.assetExists(path))
 		#else
-		var path:String = Paths.getSharedPath(characterPath);
+		var path:String = Paths.findAsset(characterPath); //getSharedPath
 		if (!OpenFlAssets.exists(path))
 		#end
 		{
@@ -3197,7 +3197,7 @@ class ChartingState extends MusicBeatState
 		}
 
 		#if MODS_ALLOWED
-		var rawJson = File.getContent(path);
+		var rawJson = mobile.backend.AssetUtils.getAssetContent(path);
 		#else
 		var rawJson = OpenFlAssets.getText(path);
 		#end
@@ -3254,11 +3254,11 @@ class ChartingState extends MusicBeatState
 		var skin:NoteSkinHelper = PlayState.noteSkin;
 		if (_song.arrowSkin != 'default' && _song.arrowSkin != '' && _song.arrowSkin != null)
 		{
-			if (FileSystem.exists(Paths.modsNoteskin('${_song.arrowSkin}')))
+			if (mobile.backend.AssetUtils.assetExists(Paths.modsNoteskin('${_song.arrowSkin}')))
 			{
 				skin = new NoteSkinHelper(Paths.modsNoteskin('${_song.arrowSkin}'));
 			}
-			else if (FileSystem.exists(Paths.noteskin('${_song.arrowSkin}')))
+			else if (mobile.backend.AssetUtils.assetExists(Paths.noteskin('${_song.arrowSkin}')))
 			{
 				// Noteskin doesn't exist in assets, trying mods folder
 				skin = new NoteSkinHelper(Paths.noteskin('${_song.arrowSkin}'));
@@ -3266,7 +3266,7 @@ class ChartingState extends MusicBeatState
 		}
 		else
 		{
-			if (FileSystem.exists(Paths.modsNoteskin('default')))
+			if (mobile.backend.AssetUtils.assetExists(Paths.modsNoteskin('default')))
 			{
 				skin = new NoteSkinHelper(Paths.modsNoteskin('default'));
 			}

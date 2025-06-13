@@ -17,6 +17,8 @@ import funkin.states.*;
 import funkin.states.substates.ResetScoreSubStateImpostor;
 import funkin.objects.RankIcon;
 
+import mobile.states.LoadingScreen; // if I wants
+
 class StoryMenuState extends MusicBeatState
 {
 	public static var weekCompleted:Map<String, Bool> = new Map<String, Bool>();
@@ -336,7 +338,7 @@ class StoryMenuState extends MusicBeatState
 		PlayState.campaignScore = 0;
 		PlayState.campaignMisses = 0;
 		
-		LoadingState.loadAndSwitchState(new PlayState(), true);
+		LoadingState.loadAndSwitchState(new PlayState(), true); // LoadingState or LoadingScreen(my load screen)
 	}
 
 	override function closeSubState()

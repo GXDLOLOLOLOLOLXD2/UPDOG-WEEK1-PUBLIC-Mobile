@@ -67,7 +67,7 @@ class MusicBeatState extends FlxUIState
 
 		var scriptFile = FunkinIris.getPath('scripts/menus/$scriptName', false);
 
-		if (FileSystem.exists(scriptFile))
+		if (mobile.backend.AssetUtils.assetExists(scriptFile))
 		{
 			script = OverrideStateScript.fromFile(scriptFile);
 			trace('$scriptName script [$scriptFile] found!');

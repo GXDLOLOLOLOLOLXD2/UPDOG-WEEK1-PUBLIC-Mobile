@@ -589,9 +589,9 @@ class PlayState extends MusicBeatState
 		
 		for (folder in foldersToCheck)
 		{
-			if (FileSystem.exists(folder))
+			if (mobile.backend.AssetUtils.assetExists(folder))
 			{
-				for (file in FileSystem.readDirectory(folder))
+				for (file in mobile.backend.AssetUtils.listAssets(folder))
 				{
 					if (!filesPushed.contains(file))
 					{
@@ -789,9 +789,9 @@ class PlayState extends MusicBeatState
 		
 		for (folder in foldersToCheck)
 		{
-			if (FileSystem.exists(folder))
+			if (mobile.backend.AssetUtils.assetExists(folder))
 			{
-				for (file in FileSystem.readDirectory(folder))
+				for (file in mobile.backend.AssetUtils.listAssets(folder))
 				{
 					if (!filesPushed.contains(file))
 					{
@@ -850,7 +850,7 @@ class PlayState extends MusicBeatState
 			Paths.music(Paths.formatToSongPath(ClientPrefs.pauseMusic));
 		}
 		
-		#if DISCORD_ALLOWED
+		#if desktop // DISCORD_ALLOWED
 		// Updating Discord Rich Presence.
 		DiscordClient.changePresence(detailsText, getPresence(), null);
 		#end
@@ -876,8 +876,8 @@ class PlayState extends MusicBeatState
 	
 	function noteskinLoading(skin:String = 'default')
 	{
-		if (FileSystem.exists(Paths.modsNoteskin(skin))) noteSkin = new NoteSkinHelper(Paths.modsNoteskin(skin));
-		else if (FileSystem.exists(Paths.noteskin(skin))) noteSkin = new NoteSkinHelper(Paths.noteskin(skin));
+		if (mobile.backend.AssetUtils.assetExists(Paths.modsNoteskin(skin))) noteSkin = new NoteSkinHelper(Paths.modsNoteskin(skin));
+		else if (mobile.backend.AssetUtils.assetExists(Paths.noteskin(skin))) noteSkin = new NoteSkinHelper(Paths.noteskin(skin));
 		
 		arrowSkin = skin;
 		
@@ -1114,7 +1114,7 @@ class PlayState extends MusicBeatState
 		if (FileSystem.exists(fileName))
 		{
 		#else
-		if (OpenFlAssets.exists(fileName))
+		if (mobile.backend.AssetUtils.assetExists(fileName)) // OpenFLAssets.exists
 		{
 		#end
 			foundFile = true;
@@ -1538,7 +1538,7 @@ class PlayState extends MusicBeatState
 		var songName:String = Paths.formatToSongPath(SONG.song);
 		var file:String = Paths.json(songName + '/events');
 		#if MODS_ALLOWED
-		if (FileSystem.exists(Paths.modsJson(songName + '/events')) || FileSystem.exists(file) || OpenFlAssets.exists(file))
+		if (mobile.backend.AssetUtils.assetExists(Paths.modsJson(songName + '/events')) || mobile.backend.AssetUtils.assetExists(file) || OpenFlAssets.exists(file))
 		{
 		#else
 		if (OpenFlAssets.exists(file))
@@ -1673,11 +1673,11 @@ class PlayState extends MusicBeatState
 			for (ext in exts)
 			{
 				if (doPush) break;
-				var baseFile = '$baseScriptFile.$ext';
-				var files = [#if MODS_ALLOWED Paths.modFolders(baseFile), #end Paths.getSharedPath(baseFile), Paths.findAsset(baseFile)];
+				var baseFile = '$baseScriptFile.$ext';// #if MODS_ALLOWED Paths.modFolders(baseFile), #end Paths.getSharedPath(baseFile), 
+				var files = [Paths.findAsset(baseFile)];
 				for (file in files)
 				{
-					if (FileSystem.exists(file))
+					if (mobile.backend.AssetUtils.assetExists(file))
 					{
 						if (ext == LUA)
 						{
@@ -1720,11 +1720,11 @@ class PlayState extends MusicBeatState
 			for (ext in exts)
 			{
 				if (doPush) break;
-				var baseFile = '$baseScriptFile.$ext';
-				var files = [#if MODS_ALLOWED Paths.modFolders(baseFile), #end Paths.getSharedPath(baseFile), Paths.findAsset(baseFile)];
+				var baseFile = '$baseScriptFile.$ext';//#if MODS_ALLOWED Paths.modFolders(baseFile), #end Paths.getSharedPath(baseFile), 
+				var files = [Paths.findAsset(baseFile)];
 				for (file in files)
 				{
-					if (FileSystem.exists(file))
+					if (mobile.backend.AssetUtils.assetExists(file))
 					{
 						if (ext == LUA)
 						{
@@ -2329,7 +2329,7 @@ class PlayState extends MusicBeatState
 					vocals.pause();
 				}
 				openSubState(new funkin.states.substates.ImpostorPause());
-				#if DISCORD_ALLOWED
+				#if desktop // DISCORD_ALLOWED
 				DiscordClient.changePresence(detailsPausedText, getPresence());
 				#end
 			}
