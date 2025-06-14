@@ -19,7 +19,7 @@ import funkin.objects.RankIcon;
 import funkin.backend.FunkinShader.FunkinRuntimeShader;
 import funkin.utils.DifficultyUtil;
 import funkin.states.substates.GameplayChangersSubstate;
-
+import mobile.scripting.NativeAPI;
 class FreeplayState extends MusicBeatState
 {
 	public static var curWeek:Int = 0;
@@ -60,7 +60,7 @@ class FreeplayState extends MusicBeatState
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
 		
-		#if DISCORD_ALLOWED
+		#if desktop // DISCORD_ALLOWED
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("Freeplay Menu", null);
 		#end
@@ -163,11 +163,12 @@ class FreeplayState extends MusicBeatState
 		#if mobile
 		addVirtualPad(FULL,A_B_C_X_Y_Z);
 		#end
+		NativeAPI.showMessageBox("FreeplayState Error", "Something got error. Please check create() function.");
 	}
 	
 	function createShader(fragFile:String = null, vertFile:String = null):FunkinRuntimeShader
 	{
-		return new FunkinRuntimeShader(fragFile == null ? null : File.getContent(Paths.modsShaderFragment(fragFile)));
+		return new FunkinRuntimeShader(fragFile == null ? null : mobile.backend.AssetUtils.getAssetContent(Paths.modsShaderFragment(fragFile)));
 	}
 	
 	function reloadWeekShit()

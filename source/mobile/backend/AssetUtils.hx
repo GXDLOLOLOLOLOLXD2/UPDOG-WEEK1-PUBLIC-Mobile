@@ -7,6 +7,10 @@ import openfl.media.Sound;
 import openfl.text.Font;
 import openfl.utils.ByteArray;
 //import haxe.concurrent.Future;
+
+import funkin.Paths.findAsset;
+import mobile.scripting.NativeAPI;
+
 #if sys
 import sys.io.File;
 #end
@@ -48,8 +52,16 @@ class AssetUtils
      */
     public static function assetExists(id:String, ?type:AssetType):Bool
     {
-        //NativeAPI.showMessageBox("Asset Exists", "Checking if asset '${id}' exists: ${Assets.exists(id, type)}");
-        return Assets.exists(id, type);
+        var path = findAsset(id);
+        if (path != null) {
+            try {
+                return path != null;
+            } catch (e:Dynamic) {
+                NativeAPI.showMessageBox("Asset Exists", "Checking if asset '${id}' exists: ${Assets.exists(id, type)}");
+            }
+        }
+        return false;
+        //return Assets.exists(id, type);
     }
 
     /**
@@ -63,12 +75,22 @@ class AssetUtils
      */
     public static function getBitmap(id:String):BitmapData
     {
-        try {
+        var path = findAsset(id);
+        if (path != null) {
+            try {
+                return Assets.getBitmapData(path);
+            } catch (e:Dynamic) {
+                trace('Error in load image "${path}": ${e}');
+                NativeAPI.showMessageBox("Assets Error", "Failed to load image '${path}': ${e}");
+            }
+        }
+        return null;
+        /*try {
             return Assets.getBitmapData(id);
         } catch (e:Dynamic) {
             trace('Error in load image "${id}": ${e}');
             return null; // Retorna null em caso de erro
-        }
+        }*/
     }
 
     /**
@@ -82,12 +104,22 @@ class AssetUtils
      */
     public static function getSound(id:String):Sound
     {
-        try {
+        var path = findAsset(id);
+        if (path != null) {
+            try {
+                return Assets.getSound(path);
+            } catch (e:Dynamic) {
+                trace('Error in load sound "${path}": ${e}');
+                NativeAPI.showMessageBox("Assets Error", "Failed to load sound '${path}': ${e}");
+            }
+        }
+        return null;
+        /*try {
             return Assets.getSound(id);
         } catch (e:Dynamic) {
             trace('Error in load sound "${id}": ${e}');
             return null;
-        }
+        }*/
     }
 
     /**
@@ -101,12 +133,22 @@ class AssetUtils
      */
     public static function getFont(id:String):Font
     {
-        try {
+        var path = findAsset(id);
+        if (path != null) {
+            try {
+                return Assets.getFont(path);
+            } catch (e:Dynamic) {
+                trace('Error in load font "${path}": ${e}');
+                NativeAPI.showMessageBox("Assets Error", "Failed to load font '${path}': ${e}");
+            }
+        }
+        return null;
+        /*try {
             return Assets.getFont(id);
         } catch (e:Dynamic) {
             trace('Error in load font "${id}": ${e}');
             return null;
-        }
+        }*/
     }
 
     /**
@@ -119,12 +161,22 @@ class AssetUtils
      */
     public static function getText(id:String):String
     {
-        try {
+        var path = findAsset(id);
+        if (path != null) {
+            try {
+                return Assets.getText(path);
+            } catch (e:Dynamic) {
+                trace('Error in load text "${path}": ${e}');
+                NativeAPI.showMessageBox("Assets Error", "Failed to load text '${path}': ${e}");
+            }
+        }
+        return null;
+        /*try {
             return Assets.getText(id);
         } catch (e:Dynamic) {
             trace('Error in load text "${id}": ${e}');
             return null;
-        }
+        }*/
     }
 
     /**
@@ -137,12 +189,22 @@ class AssetUtils
      */
     public static function getBytes(id:String):ByteArray
     {
-        try {
+        var path = findAsset(id);
+        if (path != null) {
+            try {
+                return Assets.getBytes(path);
+            } catch (e:Dynamic) {
+                trace('Error in load bytes "${path}": ${e}');
+                NativeAPI.showMessageBox("Assets Error", "Failed to load bytes from '${path}': ${e}");
+            }
+        }
+        return null;
+        /*try {
             return Assets.getBytes(id);
         } catch (e:Dynamic) {
             trace('Error in load bytes "${id}": ${e}');
             return null;
-        }
+        }*/
     }
 
     /**
@@ -178,14 +240,61 @@ class AssetUtils
      */
     public static function getAssetContent(id:String):String
     {
-        if (Assets.exists(id)) {
-            return Assets.getText(id);
+        var path = findAsset(id);
+        if (path != null) {
+            try {
+                return Assets.getText(path);
+            } catch (e:Dynamic) {
+                trace('Error in get asset content "${path}": ${e}');
+                NativeAPI.showMessageBox("Assets Error", "Failed to get content from asset '${path}': ${e}");
+            }
         }
         return null;
+        /*if (Assets.exists(id)) {
+            return Assets.getText(id);
+        }
+        return null;*/
     }
 
-    // --- Métodos assíncronos (retornam Future) ---
+    /**
+     * Ensures that the given path ends with a '/' character.
+     * 
+     * This function is the "opposite" (internal counterpart) of `sys.FileSystem.isDirectory`,
+     * as it modifies the path string to explicitly indicate a directory by appending a trailing slash if missing.
+     *
+     * Usage:
+     * ```
+     * if (AssetUtils.isAssetDirectory("assets/images/menu/story")) {
+     * // Existe pelo menos um asset nesse "diretório virtual"
+     * // At least one asset exists in this "virtual directory"
+     * }
+     * ```
+     *
+     * @param path The file or directory path to normalize.
+     * @return The normalized path ending with a '/'.
+     */
+    public static function isAssetDirectory(path:String):Bool
+    {
+        // Garante que termina com o caractere /.
+        // =>
+        // Ensures that the given path ends with a '/' character.
+        if (!path.endsWith("/")) path += "/";
+        for (id in Assets.list())
+        {
+            if (id.startsWith(path)) return true;
+        }
+        return false;
+    }
 
+    /*                      ______ _____ ___
+       |    |  |\   | |   | \      |     |  \
+       |    |  | \  | |   |  \     |____ |   |   Functions
+       |    |  |  \ | |   |  /     |     |   |   LOL
+       |____|  |   \| |___| /_____ |____ |__/
+       "Unused"
+    */
+
+    // --- Métodos assíncronos (retornam Future) ---
     /**
      * Carrega assincronamente e retorna os dados de bitmap de uma imagem interna.
      * @param id O identificador do asset da imagem.

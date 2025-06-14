@@ -226,12 +226,12 @@ class FunkinLua extends FunkinScript
 			if (luaFile.endsWith(".lua")) cervix = luaFile;
 			var doPush = false;
 			#if MODS_ALLOWED
-			if (FileSystem.exists(Paths.modFolders(cervix)))
+			if (mobile.backend.AssetUtils.assetExists(Paths.modFolders(cervix)))
 			{
 				cervix = Paths.modFolders(cervix);
 				doPush = true;
 			}
-			else if (FileSystem.exists(cervix))
+			else if (mobile.backend.AssetUtils.assetExists(cervix))
 			{
 				doPush = true;
 			}
@@ -290,12 +290,12 @@ class FunkinLua extends FunkinScript
 			if (luaFile.endsWith(".lua")) cervix = luaFile;
 			var doPush = false;
 			#if MODS_ALLOWED
-			if (FileSystem.exists(Paths.modFolders(cervix)))
+			if (mobile.backend.AssetUtils.assetExists(Paths.modFolders(cervix)))
 			{
 				cervix = Paths.modFolders(cervix);
 				doPush = true;
 			}
-			else if (FileSystem.exists(cervix))
+			else if (mobile.backend.AssetUtils.assetExists(cervix))
 			{
 				doPush = true;
 			}
@@ -358,12 +358,12 @@ class FunkinLua extends FunkinScript
 			if (luaFile.endsWith(".lua")) cervix = luaFile;
 			var doPush = false;
 			#if MODS_ALLOWED
-			if (FileSystem.exists(Paths.modFolders(cervix)))
+			if (mobile.backend.AssetUtils.assetExists(Paths.modFolders(cervix)))
 			{
 				cervix = Paths.modFolders(cervix);
 				doPush = true;
 			}
-			else if (FileSystem.exists(cervix))
+			else if (mobile.backend.AssetUtils.assetExists(cervix))
 			{
 				doPush = true;
 			}
@@ -405,12 +405,12 @@ class FunkinLua extends FunkinScript
 			if (luaFile.endsWith(".lua")) cervix = luaFile;
 			var doPush = false;
 			#if MODS_ALLOWED
-			if (FileSystem.exists(Paths.modFolders(cervix)))
+			if (mobile.backend.AssetUtils.assetExists(Paths.modFolders(cervix)))
 			{
 				cervix = Paths.modFolders(cervix);
 				doPush = true;
 			}
-			else if (FileSystem.exists(cervix))
+			else if (mobile.backend.AssetUtils.assetExists(cervix))
 			{
 				doPush = true;
 			}
@@ -507,12 +507,12 @@ class FunkinLua extends FunkinScript
 			if (luaFile.endsWith(".lua")) cervix = luaFile;
 			var doPush = false;
 			#if MODS_ALLOWED
-			if (FileSystem.exists(Paths.modFolders(cervix)))
+			if (mobile.backend.AssetUtils.assetExists(Paths.modFolders(cervix)))
 			{
 				cervix = Paths.modFolders(cervix);
 				doPush = true;
 			}
-			else if (FileSystem.exists(cervix))
+			else if (mobile.backend.AssetUtils.assetExists(cervix))
 			{
 				doPush = true;
 			}
@@ -553,12 +553,12 @@ class FunkinLua extends FunkinScript
 			if (luaFile.endsWith(".lua")) cervix = luaFile;
 			var doPush = false;
 			#if MODS_ALLOWED
-			if (FileSystem.exists(Paths.modFolders(cervix)))
+			if (mobile.backend.AssetUtils.assetExists(Paths.modFolders(cervix)))
 			{
 				cervix = Paths.modFolders(cervix);
 				doPush = true;
 			}
-			else if (FileSystem.exists(cervix))
+			else if (mobile.backend.AssetUtils.assetExists(cervix))
 			{
 				doPush = true;
 			}
@@ -610,12 +610,12 @@ class FunkinLua extends FunkinScript
 			if (luaFile.endsWith(".lua")) cervix = luaFile;
 			var doPush = false;
 			#if MODS_ALLOWED
-			if (FileSystem.exists(Paths.modFolders(cervix)))
+			if (mobile.backend.AssetUtils.assetExists(Paths.modFolders(cervix)))
 			{
 				cervix = Paths.modFolders(cervix);
 				doPush = true;
 			}
-			else if (FileSystem.exists(cervix))
+			else if (mobile.backend.AssetUtils.assetExists(cervix))
 			{
 				doPush = true;
 			}
@@ -1924,7 +1924,7 @@ class FunkinLua extends FunkinScript
 		});
 		Lua_helper.add_callback(lua, "startVideo", function(videoFile:String) {
 			#if VIDEOS_ALLOWED
-			if (FileSystem.exists(Paths.video(videoFile)))
+			if (mobile.backend.AssetUtils.assetExists(Paths.video(videoFile)))
 			{
 				PlayState.instance.startVideo(videoFile);
 			}

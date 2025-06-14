@@ -98,9 +98,9 @@ class NoteSkinEditor extends MusicBeatState
 	{
 		var noteskin:NoteSkinHelper = null;
 
-		if (FileSystem.exists(Paths.modsNoteskin(n)))
+		if (mobile.backend.AssetUtils.assetExists(Paths.modsNoteskin(n)))
 			noteskin = new NoteSkinHelper(Paths.modsNoteskin(n));
-		else if (FileSystem.exists(Paths.noteskin(n)))
+		else if (mobile.backend.AssetUtils.assetExists(Paths.noteskin(n)))
 			noteskin = new NoteSkinHelper(Paths.noteskin(n));
 
 		noteskin ??= new NoteSkinHelper(Paths.noteskin('default'));
@@ -1240,23 +1240,29 @@ class NoteSkinEditor extends MusicBeatState
 			directories.push(Paths.mods(mod + '/noteskins/'));
 		for (i in 0...directories.length)
 		{
-			var directory:String = directories[i];
-			if (FileSystem.exists(directory))
-			{
-				for (file in FileSystem.readDirectory(directory))
-				{
-					var path = haxe.io.Path.join([directory, file]);
-					if (!sys.FileSystem.isDirectory(path) && file.endsWith('.json'))
-					{
-						var charToCheck:String = file.substr(0, file.length - 5);
-						if (!skinsLoaded.exists(charToCheck))
-						{
-							skinList.push(charToCheck);
-							skinsLoaded.set(charToCheck, true);
-						}
-					}
-				}
-			}
+    		var directory:String = directories[i];
+    		if (mobile.backend.AssetUtils.assetExists(directory))
+    		{
+        		for (file in mobile.backend.AssetUtils.listAssets())
+        		{
+            		if (file.startsWith(directory))
+            		{
+				var relative = file.substr(directory.length);
+                    		// Subdirectory Ignoration and Null files
+                    		if (relative == "" || relative.indexOf("/") != -1) continue;
+                		var path = haxe.io.Path.join([directory, relative]);
+                		if (!mobile.backend.AssetUtils.isAssetDirectory(path) && file.endsWith('.json'))
+                		{
+                    		var charToCheck:String = relative.substr(0, relative.length - 5);
+                    		if (!skinsLoaded.exists(charToCheck))
+                    		{
+                        		skinList.push(charToCheck);
+                        		skinsLoaded.set(charToCheck, true);
+                    		}
+                		}
+            		}
+        		}
+    		}
 		}
 		// #else
 		// skinList = CoolUtil.coolTextFile(Paths.txt('noteskin_list'));

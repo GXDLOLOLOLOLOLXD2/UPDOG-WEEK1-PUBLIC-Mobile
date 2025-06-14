@@ -83,16 +83,16 @@ class DialogueCharacter extends FlxSprite
 
 		#if MODS_ALLOWED
 		var path:String = Paths.modFolders(characterPath);
-		if (!FileSystem.exists(path))
-		{
-			path = Paths.getSharedPath(characterPath);
+		if (!mobile.backend.AssetUtils.assetExists(path))
+		{//getSharedPath
+			path = Paths.findAsset(characterPath);
 		}
 
-		if (!FileSystem.exists(path))
-		{
-			path = Paths.getSharedPath('images/dialogue/' + DEFAULT_CHARACTER + '.json');
+		if (!mobile.backend.AssetUtils.assetExists(path))
+		{// getSharedPath
+			path = Paths.findAsset('images/dialogue/' + DEFAULT_CHARACTER + '.json');
 		}
-		rawJson = File.getContent(path);
+		rawJson = mobile.backend.AssetUtils.getAssetContent(path);
 		#else
 		var path:String = Paths.getSharedPath(characterPath);
 		rawJson = Assets.getText(path);
@@ -592,9 +592,9 @@ class DialogueBoxPsych extends FlxSpriteGroup
 	public static function parseDialogue(path:String):DialogueFile
 	{
 		#if MODS_ALLOWED
-		if (FileSystem.exists(path))
+		if (mobile.backend.AssetUtils.assetExists(path))
 		{
-			return cast Json.parse(File.getContent(path));
+			return cast Json.parse(mobile.backend.AssetUtils.getAssetContent(path));
 		}
 		#end
 		return cast Json.parse(Assets.getText(path));

@@ -178,7 +178,7 @@ class Paths
 	{
 		return getPath(file, type, library);
 	}
-	
+
 	public static function txt(key:String, ?library:String)
     {
         var path = findAsset('data/$key.txt');
@@ -194,16 +194,15 @@ class Paths
             return path;
         return getPath('data/$key.xml', TEXT, library);
     }
-	
+
 	public static function json(key:String, ?library:String)
     {
         var path = findAsset('songs/$key.json');
         if (path != null)
             return path;
-        else
-           return getPath('songs/$key.json', TEXT, library);
+        return getPath('songs/$key.json', TEXT, library);
     }
-	
+
 	public static function noteskin(key:String, ?library:String)
     {
         var path = findAsset('noteskins/$key.json');
@@ -291,7 +290,7 @@ class Paths
 		    var file:String = getPath('videos/$key.$VIDEO_EXT', AssetType.BINARY);
 		    #if MODS_ALLOWED
 		    var modfile:String = modsVideo(key);
-		    if (modfile != null && FileSystem.exists(modfile))
+		    if (modfile != null && mobile.backend.AssetUtils.assetExists(modfile))
 		    {
 		    	return modfile;
 		    }
@@ -318,10 +317,10 @@ class Paths
 	    	if (currentModDirectory != null && currentModDirectory.length > 0)
 	    	{
 	    		var modp = mods(currentModDirectory + '/images/$key');
-	    		if (FileSystem.exists(modp)) return modp;
+	    		if (mobile.backend.AssetUtils.assetExists(modp)) return modp;
 	    	}
 	    	var modp = modFolders('images/$key');
-	    	if (FileSystem.exists(modp)) return modp;
+	    	if (mobile.backend.AssetUtils.assetExists(modp)) return modp;
 	    	return modFolders('images/$key');
 		    #end
 
@@ -354,7 +353,7 @@ class Paths
 		// by me (just testing, I'm learning)
 	    // Try get modified atlas
 	    var modp = modTextureAtlas(key);
-	    if (modp != null && FileSystem.exists(modp))
+	    if (modp != null && mobile.backend.AssetUtils.assetExists(modp))
 	    	return modp;
 
 	    // Default folder
@@ -385,7 +384,7 @@ class Paths
 
         #if MODS_ALLOWED
         var soundmod:String = modsSounds("sounds", key);
-        if (FileSystem.exists(soundmod))
+        if (mobile.backend.AssetUtils.assetExists(soundmod))
         {
             if (!currentTrackedSounds.exists(soundmod))
             {
@@ -524,6 +523,8 @@ class Paths
             var bitmap = BitmapData.fromFile(path);
             return FlxGraphic.fromBitmapData(bitmap, false, path);
         }
+        trace('Image Asset not found: $key'); // or $path if wants
+        NativeAPI.showMessageBox("Path Error", "The image \"" + key + "\" not found. The image really exists?...");
         return returnGraphic(key, library); // default fallback
     }
 
@@ -607,7 +608,7 @@ class Paths
     {
         #if MODS_ALLOWED // MODS_ALLOWED // U are not allowed to use this
         var file:String = modsFont(key);
-        if (FileSystem.exists(file)) return file;
+        if (mobile.backend.AssetUtils.assetExists(file)) return file;
         #end
 
         var assetPath:String = findAsset('fonts/$key.ttf');
@@ -625,13 +626,13 @@ class Paths
 
     public static function fileExists(key:String, type:AssetType, ?ignoreMods:Bool = false, ?library:String)
     {
-        #if MODS_ALLOWED // MODS_ALLOWED // FileSystem -> shhhhhhhhhhh!! u are not allowed to use this
+        /*#if MODS_ALLOWED // MODS_ALLOWED // FileSystem -> shhhhhhhhhhh!! u are not allowed to use this
         if (FileSystem.exists(mods(currentModDirectory + '/' + key)) || FileSystem.exists(mods(key)))
         {
             return true;
         }
         #end
-
+        */
         if (OpenFlAssets.exists(getPath(key, type)))
         {
             return true;
@@ -715,10 +716,10 @@ class Paths
             localTrackedAssets.push(file);
             return currentTrackedAssets.get(file);
         }
-        else if (FileSystem.exists(file))
+        /*else if (FileSystem.exists(file))
         {
             bitmap = BitmapData.fromFile(file);
-        }
+        }*/
 		else if (mobile.backend.AssetUtils.assetExists(file))
 		{
 			bitmap = mobile.backend.AssetUtils.getBitmap(file);
@@ -755,7 +756,7 @@ class Paths
         if (bitmap == null)
         {
             #if MODS_ALLOWED
-            if (FileSystem.exists(file)) bitmap = BitmapData.fromFile(file);
+            if (mobile.backend.AssetUtils.assetExists(file)) bitmap = BitmapData.fromFile(file);
             #end
             if (bitmap == null && OpenFlAssets.exists(file, IMAGE))
                 bitmap = OpenFlAssets.getBitmapData(file);
@@ -790,11 +791,11 @@ class Paths
         if (library != null) modLibPath = '$library/';
         if (path != null) modLibPath += '$path/';
         var modSoundPath:String = modsSounds(modLibPath, key);
-        if (FileSystem.exists(modSoundPath))
+        if (mobile.backend.AssetUtils.assetExists(modSoundPath)) // FileSystem.exists
         {
             if (!currentTrackedSounds.exists(modSoundPath))
             {
-                currentTrackedSounds.set(modSoundPath, Sound.fromFile(modSoundPath));
+                currentTrackedSounds.set(modSoundPath, Sound.fromFile(modSoundPath)); // can be mobile.backend.AssetUtils.getSound(modSoundPath)
             }
             localTrackedAssets.push(modSoundPath);
             return currentTrackedSounds.get(modSoundPath);
@@ -889,7 +890,7 @@ class Paths
         if (currentModDirectory != null && currentModDirectory.length > 0)
         {
             var candidate:String = mods(currentModDirectory + "/" + key);
-            if (FileSystem.exists(candidate))
+            if (mobile.backend.AssetUtils.assetExists(candidate))
                 return candidate;
         }
         // Read globals mods
@@ -897,7 +898,7 @@ class Paths
         for (mod in modsList)
         {
             var candidate:String = mods(mod + "/" + key);
-            if (FileSystem.exists(candidate))
+            if (mobile.backend.AssetUtils.assetExists(candidate))
                 return candidate;
         }
         // Return default mod path
@@ -915,9 +916,9 @@ class Paths
     {
         globalMods = [];
 
-        if (FileSystem.exists("modsList.txt"))
+        if (mobile.backend.AssetUtils.assetExists("modsList.txt"))
         {
-            var lines:Array<String> = CoolUtil.listFromString(File.getContent("modsList.txt"));
+            var lines:Array<String> = CoolUtil.listFromString(mobile.backend.AssetUtils.getAssetContent("modsList.txt"));
             for (line in lines)
             {
                 var dat = line.split("|");
@@ -925,11 +926,11 @@ class Paths
                 {
                     var folder = dat[0];
                     var packPath = Paths.mods(folder + "/pack.json");
-                    if (FileSystem.exists(packPath))
+                    if (mobile.backend.AssetUtils.assetExists(packPath)) // FileSystem.exists
                     {
                         try
                         {
-                            var raw:String = File.getContent(packPath);
+                            var raw:String = mobile.backend.AssetUtils.getAssetContent(packPath); // File.getContent
                             if (raw != null && raw.length > 0)
                             {
                                 var info:Dynamic = Json.parse(raw);
@@ -954,17 +955,22 @@ class Paths
     {
         var list:Array<String> = [];
         var modsFolder:String = mods();
-        if (FileSystem.exists(modsFolder))
+        if (mobile.backend.AssetUtils.assetExists(modsFolder)) // FileSystem.exists
         {
-            for (folder in FileSystem.readDirectory(modsFolder))
+            for (folder in mobile.backend.AssetUtils.listAssets()) // FileSystem.readDirectory
             {
-                var path = haxe.io.Path.join([modsFolder, folder]);
-                if (sys.FileSystem.isDirectory(path) && !ignoreModFolders.contains(folder) && !list.contains(folder))
-                    list.push(folder);
+                if (folder.startsWith(modsFolder))
+                {
+                    var relative = folder.substr(modsFolder.length);
+                    // subdirectorys ignoration
+                    if (relative == "" || relative.indexOf("/") != -1) continue;
+                    var path = haxe.io.Path.join([modsFolder, relative]);
+                    if (mobile.backend.AssetUtils.isAssetDirectory(path) && !ignoreModFolders.contains(relative) && !list.contains(relative))
+                        list.push(relative); // sys.FileSystem.isDirectory
+                }
             }
         }
         return list;
     }
-
     #end
 }

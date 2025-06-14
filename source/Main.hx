@@ -11,6 +11,8 @@ import lime.system.System as LimeSystem;
 import mobile.states.LoadingScreen;
 import Splash;
 
+import mobile.backend.CrashHandler;
+
 class Main extends Sprite
 {
 	public static final PSYCH_VERSION:String = '0.5.2h';
@@ -36,7 +38,13 @@ class Main extends Sprite
 
 	public static function main():Void
 	{
-		Lib.current.addChild(new Main());
+		CrashHandler.init();
+		try {
+			Lib.current.addChild(new Main());
+		} catch (e:Dynamic) {
+			mobile.scripting.NativeAPI.showMessageBox("Crash on main", Std.string(e));
+			trace("Crash on main: " + Std.string(e));
+		}
 	}
 
 	public function new()

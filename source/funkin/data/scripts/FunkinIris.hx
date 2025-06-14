@@ -249,7 +249,7 @@ class FunkinIris extends FunkinScript
 		if (name == null)
 			name = file;
 
-		return new FunkinIris(File.getContent(file), name, additionalVars);
+		return new FunkinIris(mobile.backend.AssetUtils.getAssetContent(file), name, additionalVars); // File.getContent
 	}
 
 	public static function InitLogger()

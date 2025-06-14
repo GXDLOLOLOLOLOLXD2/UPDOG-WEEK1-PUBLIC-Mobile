@@ -329,7 +329,7 @@ class WeekEditorState extends MusicBeatState
 		var isMissing:Bool = true;
 		if (assetName != null && assetName.length > 0)
 		{
-			if (#if MODS_ALLOWED FileSystem.exists(Paths.modsImages('menubackgrounds/menu_' +
+			if (#if MODS_ALLOWED mobile.backend.AssetUtils.assetExists(Paths.modsImages('menubackgrounds/menu_' +
 				assetName)) || #end Assets.exists(Paths.getPath('images/menubackgrounds/menu_'
 				+ assetName + '.png', IMAGE), IMAGE))
 			{
@@ -353,7 +353,7 @@ class WeekEditorState extends MusicBeatState
 		var isMissing:Bool = true;
 		if (assetName != null && assetName.length > 0)
 		{
-			if (#if MODS_ALLOWED FileSystem.exists(Paths.modsImages('storymenu/' + assetName)) || #end Assets.exists(Paths.getPath('images/storymenu/'
+			if (#if MODS_ALLOWED mobile.backend.AssetUtils.assetExists(Paths.modsImages('storymenu/' + assetName)) || #end Assets.exists(Paths.getPath('images/storymenu/'
 				+ assetName + '.png', IMAGE), IMAGE))
 			{
 				weekThing.loadGraphic(Paths.image('storymenu/' + assetName));
